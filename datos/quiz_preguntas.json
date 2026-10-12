@@ -1,0 +1,97 @@
+{
+  "version": "1.0",
+  "descripcion": "Banco de preguntas del Modo Desafío. Cada pregunta tiene enunciado, 4 opciones, índice de la correcta (0-3) y explicación.",
+  "preguntas": [
+    {
+      "question": "¿Cuál es la complejidad temporal en el peor caso del algoritmo Quick Sort?",
+      "options": ["O(n log n)", "O(n²)", "O(n)", "O(log n)"],
+      "correct": 1,
+      "explanation": "Quick Sort tiene un peor caso de O(n²) cuando el pivote elegido es sistemáticamente el menor o mayor elemento (por ejemplo, en un arreglo ya ordenado con partición ingenua)."
+    },
+    {
+      "question": "En una Pila (Stack) con principio LIFO, ¿dónde se realizan las inserciones (Push) y extracciones (Pop)?",
+      "options": [
+        "En el frente (Front) y final (Rear) respectivamente",
+        "Únicamente en la cima (Top)",
+        "En cualquier índice aleatorio",
+        "En la base fija de la estructura"
+      ],
+      "correct": 1,
+      "explanation": "Una Pila restringe el acceso al extremo superior denominado cima (Top), permitiendo operaciones de inserción y extracción en O(1) bajo el principio Last-In, First-Out."
+    },
+    {
+      "question": "¿Qué condición es obligatoria para poder aplicar Búsqueda Binaria?",
+      "options": [
+        "La colección debe estar estrictamente ordenada",
+        "El arreglo debe contener una cantidad impar de elementos",
+        "La estructura debe ser una lista doblemente enlazada",
+        "No debe haber valores duplicados"
+      ],
+      "correct": 0,
+      "explanation": "Búsqueda Binaria requiere que el conjunto de datos esté previamente ordenado para poder descartar la mitad superior o inferior en cada comparación."
+    },
+    {
+      "question": "¿Cuál es el criterio de balanceo de un Árbol AVL para cada uno de sus nodos?",
+      "options": [
+        "El Factor de Equilibrio (FE) debe ser estrictamente 0",
+        "La diferencia de altura entre el subárbol izquierdo y derecho debe ser |FE| <= 1",
+        "Todos los nodos hoja deben estar exactamente en el mismo nivel",
+        "Cada nodo debe tener exactamente dos hijos"
+      ],
+      "correct": 1,
+      "explanation": "Un árbol AVL mantiene balance estricto garantizando que para todo nodo, la diferencia entre las alturas de sus subárboles sea -1, 0 o +1 (|FE| <= 1)."
+    },
+    {
+      "question": "¿Qué estructura de datos auxiliar utiliza el recorrido en anchura (BFS) de un Grafo?",
+      "options": ["Una Pila (Stack / LIFO)", "Una Cola (Queue / FIFO)", "Una Tabla Hash", "Un Montículo de Fibonacci"],
+      "correct": 1,
+      "explanation": "BFS explora los nodos por niveles de distancia utilizando una Cola (FIFO) para visitar primero todos los vecinos inmediatos antes de descender en profundidad."
+    },
+    {
+      "question": "¿Cuál de los siguientes algoritmos de ordenación garantiza O(n log n) en el peor caso utilizando espacio auxiliar O(1)?",
+      "options": ["Merge Sort", "Heap Sort (Montículo)", "Bubble Sort", "Quick Sort"],
+      "correct": 1,
+      "explanation": "Heap Sort garantiza O(n log n) en todos los casos (mejor, promedio y peor) y opera 'in-place' utilizando únicamente O(1) de memoria auxiliar."
+    },
+    {
+      "question": "En una Tabla Hash con Direccionamiento Abierto (Linear Probing), ¿qué ocurre ante una colisión?",
+      "options": [
+        "Se crea una lista enlazada en la misma celda",
+        "Se inspecciona secuencialmente la siguiente ranura disponible (i + 1) % m",
+        "El elemento anterior se sobrescribe automáticamente",
+        "La tabla se redimensiona de forma inmediata al doble"
+      ],
+      "correct": 1,
+      "explanation": "En sondeo lineal (Linear Probing), si una casilla está ocupada, se busca la siguiente ranura libre contigua de forma circular."
+    },
+    {
+      "question": "¿Cuál es la complejidad de la operación PUSH en una Pila implementada con arreglo dinámico?",
+      "options": ["O(1) amortizado", "O(log n)", "O(n)", "O(n log n)"],
+      "correct": 0,
+      "explanation": "El PUSH es O(1) amortizado: si bien al redimensionar el arreglo se copian los elementos, ese costo se reparte entre todas las inserciones previas."
+    },
+    {
+      "question": "En una Lista Doblemente Enlazada, ¿qué ventaja tiene respecto de la Simple?",
+      "options": [
+        "Ocupa menos memoria por nodo",
+        "Permite recorrerla en ambos sentidos y borrar la cola en O(1)",
+        "Accede al elemento i-ésimo en O(1)",
+        "Soporta orden automático"
+      ],
+      "correct": 1,
+      "explanation": "Al tener punteros prev y next, la lista doble permite recorrerla en ambos sentidos y eliminar el último nodo en O(1) usando tail.prev."
+    },
+    {
+      "question": "¿Qué propiedad distingue a un árbol binario de búsqueda (BST) de un árbol binario cualquiera?",
+      "options": [
+        "Todos los nodos tienen exactamente dos hijos",
+        "El subárbol izquierdo contiene valores menores y el derecho valores mayores",
+        "Está siempre balanceado",
+        "Se puede implementar solo con arreglos"
+      ],
+      "correct": 1,
+      "explanation": "El invariante del BST es que todo valor del subárbol izquierdo es menor que la raíz, y todo valor del subárbol derecho es mayor."
+    }
+  ]
+}
+

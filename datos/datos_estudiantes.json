@@ -1,0 +1,17 @@
+[
+  { "id": 101, "nombre": "Ana Morales", "calificacion": 88, "grupo": "A" },
+  { "id": 102, "nombre": "Carlos Perez", "calificacion": 45, "grupo": "B" },
+  { "id": 103, "nombre": "Diana Ruiz", "calificacion": 96, "grupo": "A" },
+  { "id": 104, "nombre": "Eduardo Diaz", "calificacion": 67, "grupo": "C" },
+  { "id": 105, "nombre": "Fernanda Vega", "calificacion": 74, "grupo": "B" },
+  { "id": 106, "nombre": "Gabriel Silva", "calificacion": 52, "grupo": "A" },
+  { "id": 107, "nombre": "Helena Gomez", "calificacion": 91, "grupo": "C" },
+  { "id": 108, "nombre": "Ignacio Torres", "calificacion": 33, "grupo": "B" },
+  { "id": 109, "nombre": "Julia Castro", "calificacion": 84, "grupo": "A" },
+  { "id": 110, "nombre": "Kevin Ortiz", "calificacion": 59, "grupo": "C" },
+  { "id": 111, "nombre": "Lucia Mendez", "calificacion": 78, "grupo": "B" },
+  { "id": 112, "nombre": "Manuel Rios", "calificacion": 99, "grupo": "A" },
+  { "id": 113, "nombre": "Natalia Lara", "calificacion": 62, "grupo": "C" },
+  { "id": 114, "nombre": "Oscar Benitez", "calificacion": 41, "grupo": "B" },
+  { "id": 115, "nombre": "Patricia Solis", "calificacion": 87, "grupo": "A" }
+]

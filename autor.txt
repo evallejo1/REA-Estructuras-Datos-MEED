@@ -1,0 +1,7 @@
+# =========================================================================
+# Archivo de texto plano: Nombre del Autor / Creador del REA
+# =========================================================================
+# Puede modificar libremente este archivo con el Bloc de Notas o cualquier editor.
+# Las líneas que comiencen con '#' son comentarios y serán ignoradas.
+
+Prof. Enrique Jorge Vallejo

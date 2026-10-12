@@ -1,0 +1,764 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Laboratorio Visual de Estructuras de Datos y Algoritmos (REA)</title>
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+
+  <!-- BARRA DE MENÚ SUPERIOR -->
+  <div class="app-topbar">
+    <ul class="top-menu-list">
+      <li class="top-menu-item">
+        <button class="top-menu-trigger">📁 Archivo ▾</button>
+        <ul class="top-menu-dropdown">
+          <li><button onclick="document.getElementById('file-upload-input').click()">📤 Cargar Archivo Externo (.csv, .txt, .json)</button></li>
+          <li class="menu-divider"></li>
+          <li><button onclick="window.loadPresetTrigger('datos_numeros.csv')">📊 Dataset: datos_numeros.csv</button></li>
+          <li><button onclick="window.loadPresetTrigger('datos_valores.txt')">📄 Dataset: datos_valores.txt</button></li>
+          <li><button onclick="window.loadPresetTrigger('datos_estudiantes.json')">🎓 Dataset: datos_estudiantes.json</button></li>
+          <li><button onclick="window.loadPresetTrigger('datos_inversos.csv')">📉 Dataset: datos_inversos.csv</button></li>
+          <li class="menu-divider"></li>
+          <li><button onclick="document.getElementById('gen-random-btn')?.click()">🎲 Generar Dataset Aleatorio</button></li>
+          <li><button onclick="BenchmarkRunner.exportToCSV()">💾 Exportar Benchmark a CSV</button></li>
+        </ul>
+      </li>
+
+      <li class="top-menu-item">
+        <button class="top-menu-trigger">📊 Algoritmos ▾</button>
+        <ul class="top-menu-dropdown">
+          <li><button onclick="window.switchTab('sorting')">📊 Algoritmos de Ordenamiento</button></li>
+          <li><button onclick="window.switchTab('searching')">🔍 Visualizador de Búsqueda</button></li>
+          <li class="menu-divider"></li>
+          <li><button onclick="window.switchTab('race')">🏁 Comparador en Paralelo (Race Mode)</button></li>
+          <li><button onclick="window.switchTab('benchmark')">📈 Benchmarking & Curvas de Rendimiento</button></li>
+        </ul>
+      </li>
+
+      <li class="top-menu-item">
+        <button class="top-menu-trigger">🧩 Estructuras ▾</button>
+        <ul class="top-menu-dropdown">
+          <li><button onclick="window.switchTab('stack')">🥞 Pila (Stack - LIFO)</button></li>
+          <li><button onclick="window.switchTab('queue')">🚶 Cola (Queue - FIFO)</button></li>
+          <li><button onclick="window.switchTab('ll')">🔗 Lista Enlazada (Simple / Doble)</button></li>
+          <li class="menu-divider"></li>
+          <li><button onclick="window.switchTab('bst')">🌳 Árbol Binario de Búsqueda (BST)</button></li>
+          <li><button onclick="window.switchTab('avl')">⚖️ Árbol AVL (Auto-Balanceado)</button></li>
+          <li><button onclick="window.switchTab('graph')">🌐 Grafos Ponderados (BFS, DFS, Dijkstra)</button></li>
+          <li class="menu-divider"></li>
+          <li><button onclick="window.switchTab('hash')">🗄️ Tabla Hash con Colisiones</button></li>
+        </ul>
+      </li>
+
+      <li class="top-menu-item">
+        <button class="top-menu-trigger">🎓 Aprendizaje ▾</button>
+        <ul class="top-menu-dropdown">
+          <li><button onclick="window.switchTab('quiz')">🎯 Modo Desafío / Quiz Didáctico</button></li>
+          <li><button onclick="window.switchTab('datasets')">📁 Gestor de Datasets y Archivos</button></li>
+        </ul>
+      </li>
+
+      <li class="top-menu-item">
+        <button class="top-menu-trigger">❓ Ayuda ▾</button>
+        <ul class="top-menu-dropdown">
+          <li><button onclick="window.openStructureHelp()">📖 Guía de Uso del Panel Activo</button></li>
+          <li><button onclick="window.openHelpModal()">ℹ️ Acerca de este REA y Créditos</button></li>
+          <li><button onclick="window.openHelpModal('licencia')">📜 Licencia CC-BY-NC</button></li>
+        </ul>
+      </li>
+    </ul>
+
+    <div class="topbar-right-badge">
+      <button id="accessibility-toggle-btn" class="accessibility-toggle-btn" onclick="window.toggleHighContrast()" title="Alternar contraste reforzado según pautas UNSL / WCAG">👁️ Alto Contraste</button>
+      <span>Recurso Educativo Abierto (REA)</span>
+      <button class="rea-pill-tag" onclick="window.openHelpModal()">⚖️ CC BY-NC</button>
+    </div>
+  </div>
+
+  <header class="app-header">
+    <div class="header-inner">
+      <div class="brand-box">
+        <div class="brand-icon">⚡</div>
+        <div>
+          <h1 class="brand-title">Estructuras de Datos y Algoritmos</h1>
+          <p class="brand-subtitle">Laboratorio Didáctico Universitario (REA) — Cátedras de Algoritmos y Programación</p>
+        </div>
+      </div>
+
+      <div class="header-data-controls">
+        <span class="data-badge" id="dataset-size-badge">15 valores</span>
+        <select id="dataset-preset-select" class="form-select" title="Seleccionar dataset de muestra">
+          <option value="" disabled selected>📂 Cargar archivo de ejemplo...</option>
+          <option value="datos_numeros.csv">CSV: datos_numeros.csv (25 valores)</option>
+          <option value="datos_valores.txt">TXT: datos_valores.txt (25 valores)</option>
+          <option value="datos_estudiantes.json">JSON: datos_estudiantes.json (Calificaciones)</option>
+          <option value="datos_inversos.csv">CSV: datos_inversos.csv (Peor caso)</option>
+        </select>
+        <label class="btn btn-primary" style="cursor: pointer;">
+          📤 Subir Archivo
+          <input type="file" id="file-upload-input" accept=".csv,.txt,.json" style="display: none;">
+        </label>
+      </div>
+    </div>
+  </header>
+
+  <nav class="app-nav">
+    <div class="nav-container">
+      <button class="nav-tab-btn active" data-tab="sorting">📊 Ordenamiento</button>
+      <button class="nav-tab-btn" data-tab="searching">🔍 Búsqueda</button>
+      <button class="nav-tab-btn" data-tab="race">🏁 Comparador (Race Mode)</button>
+      <button class="nav-tab-btn" data-tab="benchmark">📈 Benchmark Empírico</button>
+      <button class="nav-tab-btn" data-tab="stack">🥞 Pila (Stack)</button>
+      <button class="nav-tab-btn" data-tab="queue">🚶 Cola (Queue)</button>
+      <button class="nav-tab-btn" data-tab="ll">🔗 Lista Enlazada</button>
+      <button class="nav-tab-btn" data-tab="bst">🌳 Árbol BST</button>
+      <button class="nav-tab-btn" data-tab="avl">⚖️ Árbol AVL</button>
+      <button class="nav-tab-btn" data-tab="graph">🌐 Grafos</button>
+      <button class="nav-tab-btn" data-tab="hash">🗄️ Tabla Hash</button>
+      <button class="nav-tab-btn" data-tab="quiz">🎯 Desafío (Quiz)</button>
+      <button class="nav-tab-btn" data-tab="datasets">📁 Datasets</button>
+    </div>
+  </nav>
+
+  <main class="app-main">
+    <div class="workspace-area">
+
+      <!-- PANEL 1: ORDENAMIENTO -->
+      <section id="panel-sorting" class="tab-panel active">
+        <div class="card">
+          <div class="card-header">
+            <h2 class="card-title">📊 Simulación de Algoritmos de Ordenamiento</h2>
+            <button class="help-btn" data-help="sorting" title="Ayuda sobre este módulo (?)">❓</button>
+            <div class="hud-metrics">
+              <div class="hud-item"><span class="hud-label">Comparaciones</span><span id="sort-comparisons-count" class="hud-value">0</span></div>
+              <div class="hud-item"><span class="hud-label">Intercambios</span><span id="sort-swaps-count" class="hud-value">0</span></div>
+              <div class="hud-item"><span class="hud-label">Pasos</span><span id="sort-steps-count" class="hud-value">0</span></div>
+            </div>
+          </div>
+
+          <div class="controls-bar" style="margin-bottom: 1rem;">
+            <label for="sort-algo-select" style="font-size: 0.82rem; font-weight: 600;">Algoritmo:</label>
+            <select id="sort-algo-select" class="form-select">
+              <option value="bubble">Bubble Sort (Burbuja)</option>
+              <option value="selection">Selection Sort (Selección)</option>
+              <option value="insertion">Insertion Sort (Inserción)</option>
+              <option value="merge">Merge Sort (Mezcla)</option>
+              <option value="quick">Quick Sort (Rápido)</option>
+              <option value="heap">Heap Sort (Montículo)</option>
+              <option value="shell">Shell Sort (Brechas)</option>
+            </select>
+
+            <button id="sort-play-btn" class="btn btn-success">▶ Iniciar</button>
+            <button id="sort-pause-btn" class="btn btn-warning" disabled>⏸ Pausar</button>
+            <button id="sort-step-btn" class="btn">⏭ Paso Adelante</button>
+            <button id="sort-reset-btn" class="btn btn-danger">↺ Reiniciar</button>
+          </div>
+
+          <div id="sort-bars-stage" class="sorting-stage"></div>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem;">
+          <div class="card">
+            <div class="card-header"><h3 class="card-title">Análisis de Complejidad</h3></div>
+            <div id="sort-theory-content"></div>
+          </div>
+          <div class="card">
+            <div id="sort-code-tracer-container"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- PANEL 2: BÚSQUEDA -->
+      <section id="panel-searching" class="tab-panel">
+        <div class="card">
+          <div class="card-header">
+            <h2 class="card-title">🔍 Simulación de Algoritmos de Búsqueda</h2>
+            <button class="help-btn" data-help="searching" title="Ayuda sobre este módulo (?)">❓</button>
+            <div class="hud-metrics">
+              <div class="hud-item"><span class="hud-label">Comparaciones</span><span id="search-comparisons-count" class="hud-value">0</span></div>
+            </div>
+          </div>
+
+          <div class="controls-bar" style="margin-bottom: 0.75rem;">
+            <label for="search-algo-select" style="font-size: 0.82rem; font-weight: 700;">Modo:</label>
+            <select id="search-algo-select" class="form-select">
+              <option value="binary_perm">Búsqueda Binaria / N-aria (24 Permutaciones)</option>
+              <option value="linear">Búsqueda Lineal Secuencial (O(n))</option>
+            </select>
+
+            <label for="search-target-input" style="font-size: 0.82rem; font-weight: 700;">Objetivo:</label>
+            <input type="number" id="search-target-input" class="form-input" value="43" style="width: 75px;">
+
+            <button id="search-pick-existing" class="btn" title="Tomar un valor existente al azar">🎲 Existe</button>
+            <button id="search-pick-nonexisting" class="btn" title="Tomar un valor que no esté en la lista">🚫 No existe</button>
+            <button id="search-sort-first-btn" class="btn btn-primary" title="Ordena el arreglo actual para posibilitar la búsqueda">⇅ Auto-ordenar array</button>
+
+            <button id="search-play-btn" class="btn btn-success">▶ Buscar Todo</button>
+            <button id="search-step-btn" class="btn">⏭ Paso Adelante</button>
+            <button id="search-reset-btn" class="btn btn-danger">↺ Reiniciar</button>
+          </div>
+
+          <div id="search-permutations-panel" class="controls-bar" style="margin-bottom: 1rem; background: #0c1830; border: 1px solid #2d4570;">
+            <div style="display: flex; align-items: center; gap: 0.4rem; width: 100%; flex-wrap: wrap;">
+              <span style="font-size: 0.82rem; font-weight: 800; color: #38bdf8;">⚙️ Permutación (1 a 24):</span>
+              <select id="search-perm-select" class="form-select" style="flex: 1; min-width: 280px; font-weight: 700;"></select>
+            </div>
+
+            <div style="display: flex; gap: 0.75rem; width: 100%; flex-wrap: wrap; margin-top: 0.35rem; padding-top: 0.35rem; border-top: 1px dashed #243b61; font-size: 0.8rem;">
+              <div style="display: flex; align-items: center; gap: 0.35rem;">
+                <label style="color: #cbd5e1; font-weight: 600;">1. División:</label>
+                <select id="perm-div-select" class="form-select" style="padding: 2px 6px; font-size: 0.8rem;">
+                  <option value="bisection">Bisección (2 partes)</option>
+                  <option value="trisection">Trisección (3 partes)</option>
+                </select>
+              </div>
+
+              <div style="display: flex; align-items: center; gap: 0.35rem;">
+                <label style="color: #cbd5e1; font-weight: 600;">2. Segmento Mayor:</label>
+                <select id="perm-seg-select" class="form-select" style="padding: 2px 6px; font-size: 0.8rem;">
+                  <option value="left">Izquierda (Left-heavy)</option>
+                  <option value="center">Centro (Equitativo/Center)</option>
+                  <option value="right">Derecha (Right-heavy)</option>
+                </select>
+              </div>
+
+              <div style="display: flex; align-items: center; gap: 0.35rem;">
+                <label style="color: #cbd5e1; font-weight: 600;">3. Ajuste de Límites:</label>
+                <select id="perm-lim-select" class="form-select" style="padding: 2px 6px; font-size: 0.8rem;">
+                  <option value="strict">Estrictos (mid ± 1)</option>
+                  <option value="lower_inclusive">Inf. Inclusivo (low = mid)</option>
+                  <option value="upper_inclusive">Sup. Inclusivo (high = mid)</option>
+                  <option value="bilateral_inclusive">Conducentes (mid, mid)</option>
+                </select>
+              </div>
+
+              <div id="perm-info-badge" style="margin-left: auto; color: #93c5fd; font-weight: 700; font-size: 0.78rem; display: flex; align-items: center;">
+                Permutación activa: P-01
+              </div>
+            </div>
+          </div>
+
+          <div id="search-stage" class="search-stage-box"></div>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem;">
+          <div class="card">
+            <div class="card-header"><h3 class="card-title">Fundamentos y Requisitos</h3></div>
+            <div id="search-theory-content"></div>
+          </div>
+          <div class="card">
+            <div id="search-code-tracer-container"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- PANEL 3: RACE -->
+      <section id="panel-race" class="tab-panel">
+        <div class="card">
+          <div class="card-header">
+            <h2 class="card-title">🏁 Comparador en Paralelo (Race Mode / Benchmark Dual)</h2>
+            <button class="help-btn" data-help="race" title="Ayuda sobre este módulo (?)">❓</button>
+            <div class="controls-bar">
+              <label style="font-size: 0.82rem; font-weight: 600;">Algoritmo 1:</label>
+              <select id="race-algo1-select" class="form-select">
+                <option value="quick">Quick Sort</option>
+                <option value="merge">Merge Sort</option>
+                <option value="heap">Heap Sort</option>
+                <option value="insertion">Insertion Sort</option>
+                <option value="bubble">Bubble Sort</option>
+              </select>
+
+              <span style="font-weight: 800; color: #f59e0b;">VS</span>
+
+              <label style="font-size: 0.82rem; font-weight: 600;">Algoritmo 2:</label>
+              <select id="race-algo2-select" class="form-select">
+                <option value="bubble">Bubble Sort</option>
+                <option value="selection">Selection Sort</option>
+                <option value="insertion">Insertion Sort</option>
+                <option value="merge">Merge Sort</option>
+                <option value="quick">Quick Sort</option>
+              </select>
+
+              <button id="race-play-btn" class="btn btn-success">▶ Iniciar Duelo</button>
+              <button id="race-pause-btn" class="btn btn-warning">⏸ Pausar</button>
+              <button id="race-step-btn" class="btn">⏭ Paso a Paso</button>
+              <button id="race-reset-btn" class="btn btn-danger">↺ Reiniciar</button>
+            </div>
+          </div>
+
+          <div id="race-stage-container"></div>
+        </div>
+      </section>
+
+      <!-- PANEL 4: BENCHMARK -->
+      <section id="panel-benchmark" class="tab-panel">
+        <div class="card">
+          <div class="card-header">
+            <h2 class="card-title">📈 Curvas de Rendimiento Empírico (Operaciones vs. N)</h2>
+            <button class="help-btn" data-help="benchmark" title="Ayuda sobre este módulo (?)">❓</button>
+            <div style="display: flex; gap: 0.5rem;">
+              <button id="benchmark-run-btn" class="btn btn-primary">⚡ Ejecutar Prueba Empírica</button>
+              <button id="benchmark-export-btn" class="btn btn-success">💾 Descargar Reporte CSV</button>
+            </div>
+          </div>
+          <p style="font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 1rem;">
+            Ejecuta pruebas reales sin sobrecarga visual para tamaños de datos desde N=10 hasta N=400, comparando la tasa de crecimiento de operaciones O(n²) frente a O(n log n).
+          </p>
+          <div id="benchmark-chart-container"></div>
+        </div>
+      </section>
+
+      <!-- PANEL 5: PILA -->
+      <section id="panel-stack" class="tab-panel">
+        <div class="card">
+          <div class="card-header">
+            <h2 class="card-title">🥞 Pila (Stack - Principio LIFO)</h2>
+            <button class="help-btn" data-help="stack" title="Ayuda sobre esta estructura (?)">❓</button>
+            <button class="btn btn-primary btn-load-dataset-into" data-target="stack">📂 Cargar Dataset a la Pila</button>
+          </div>
+
+          <div class="controls-bar" style="margin-bottom: 1rem;">
+            <label for="stack-cap-input" style="font-size: 0.85rem;">Capacidad Máx:</label>
+            <input type="number" id="stack-cap-input" class="form-input" value="8" min="3" max="15" style="width: 65px;">
+            <input type="number" id="stack-val-input" class="form-input" placeholder="Valor" style="width: 120px;">
+            <button id="stack-push-btn" class="btn btn-success">📥 PUSH</button>
+            <button id="stack-pop-btn" class="btn btn-warning">📤 POP</button>
+            <button id="stack-peek-btn" class="btn">👁️ PEEK</button>
+            <button id="stack-clear-btn" class="btn btn-danger">🧹 Limpiar</button>
+          </div>
+
+          <div id="stack-stage"></div>
+        </div>
+      </section>
+
+      <!-- PANEL 6: COLA -->
+      <section id="panel-queue" class="tab-panel">
+        <div class="card">
+          <div class="card-header">
+            <h2 class="card-title">🚶 Cola (Queue - Principio FIFO)</h2>
+            <button class="help-btn" data-help="queue" title="Ayuda sobre esta estructura (?)">❓</button>
+            <button class="btn btn-primary btn-load-dataset-into" data-target="queue">📂 Cargar Dataset a la Cola</button>
+          </div>
+
+          <div class="controls-bar" style="margin-bottom: 1rem;">
+            <label for="queue-cap-input" style="font-size: 0.85rem;">Capacidad Máx:</label>
+            <input type="number" id="queue-cap-input" class="form-input" value="8" min="3" max="15" style="width: 65px;">
+            <input type="number" id="queue-val-input" class="form-input" placeholder="Valor" style="width: 120px;">
+            <button id="queue-enq-btn" class="btn btn-success">📥 ENQUEUE</button>
+            <button id="queue-deq-btn" class="btn btn-warning">📤 DEQUEUE</button>
+            <button id="queue-peek-btn" class="btn">👁️ PEEK</button>
+            <button id="queue-clear-btn" class="btn btn-danger">🧹 Limpiar</button>
+          </div>
+
+          <div id="queue-stage"></div>
+        </div>
+      </section>
+
+      <!-- PANEL 7: LISTA ENLAZADA -->
+      <section id="panel-ll" class="tab-panel">
+        <div class="card">
+          <div class="card-header">
+            <h2 class="card-title">🔗 Listas Enlazadas (Simple y Doble)</h2>
+            <button class="help-btn" data-help="ll" title="Ayuda sobre esta estructura (?)">❓</button>
+            <button class="btn btn-primary btn-load-dataset-into" data-target="ll">📂 Cargar Dataset a la Lista</button>
+          </div>
+
+          <div class="controls-bar" style="margin-bottom: 1rem;">
+            <label for="ll-type-select" style="font-size: 0.85rem;">Variante:</label>
+            <select id="ll-type-select" class="form-select">
+              <option value="singly">Simplemente Enlazada (Next)</option>
+              <option value="doubly">Doblemente Enlazada (Prev & Next)</option>
+            </select>
+            <input type="number" id="ll-val-input" class="form-input" placeholder="Valor" style="width: 85px;">
+            <input type="number" id="ll-idx-input" class="form-input" placeholder="Índice" style="width: 75px;">
+            <button id="ll-insert-head-btn" class="btn btn-success">➕ Head</button>
+            <button id="ll-insert-tail-btn" class="btn btn-success">➕ Tail</button>
+            <button id="ll-insert-idx-btn" class="btn">➕ En Pos</button>
+            <button id="ll-del-head-btn" class="btn btn-warning">➖ Del Head</button>
+            <button id="ll-del-tail-btn" class="btn btn-warning">➖ Del Tail</button>
+            <button id="ll-del-val-btn" class="btn btn-danger">🗑️ Del Val</button>
+            <button id="ll-search-btn" class="btn">🔍 Buscar</button>
+            <button id="ll-clear-btn" class="btn">🧹 Vaciar</button>
+          </div>
+
+          <div id="ll-stage"></div>
+        </div>
+      </section>
+
+      <!-- PANEL 8: BST -->
+      <section id="panel-bst" class="tab-panel">
+        <div class="card">
+          <div class="card-header">
+            <h2 class="card-title">🌳 Árbol Binario de Búsqueda (BST)</h2>
+            <button class="help-btn" data-help="bst" title="Ayuda sobre esta estructura (?)">❓</button>
+            <button class="btn btn-primary btn-load-dataset-into" data-target="bst">📂 Cargar Dataset al Árbol</button>
+          </div>
+
+          <div class="controls-bar" style="margin-bottom: 1rem; flex-wrap: wrap;">
+            <input type="number" id="bst-val-input" class="form-input" placeholder="Valor" style="width: 110px;">
+            <button id="bst-insert-btn" class="btn btn-success" title="Inserta con animación paso a paso">➕ Insertar (auto)</button>
+            <button id="bst-search-btn" class="btn" title="Busca con animación paso a paso">🔍 Buscar</button>
+            <button id="bst-delete-btn" class="btn btn-warning" title="Elimina con animación paso a paso">🗑️ Eliminar (auto)</button>
+
+            <span style="border-left: 1px solid #374151; height: 20px;"></span>
+
+            <button id="bst-play-btn" class="btn" title="Reanudar la animación pausada">▶ Reanudar</button>
+            <button id="bst-pause-btn" class="btn" title="Pausar la animación en curso">⏸ Pausar</button>
+            <button id="bst-step-btn" class="btn" title="Avanzar un único paso">⏭ Paso</button>
+            <button id="bst-clear-btn" class="btn btn-danger">🧹 Vaciar</button>
+
+            <div style="margin-left: auto; display: flex; gap: 0.4rem; flex-wrap: wrap;">
+              <button id="bst-inorder-btn" class="btn btn-primary">📖 Inorden</button>
+              <button id="bst-preorder-btn" class="btn">📖 Preorden</button>
+              <button id="bst-postorder-btn" class="btn">📖 Postorden</button>
+              <button id="bst-bfs-btn" class="btn">📖 Por Niveles</button>
+            </div>
+          </div>
+
+          <div id="bst-stage"></div>
+        </div>
+      </section>
+
+      <!-- PANEL 9: AVL -->
+      <section id="panel-avl" class="tab-panel">
+        <div class="card">
+          <div class="card-header">
+            <h2 class="card-title">⚖️ Árbol AVL Auto-Balanceado (|FE| &le; 1)</h2>
+            <button class="help-btn" data-help="avl" title="Ayuda sobre esta estructura (?)">❓</button>
+            <button class="btn btn-primary btn-load-dataset-into" data-target="avl">📂 Cargar Dataset al AVL</button>
+          </div>
+
+          <div class="controls-bar" style="margin-bottom: 1rem; flex-wrap: wrap;">
+            <input type="number" id="avl-val-input" class="form-input" placeholder="Valor numérico" style="width: 120px;">
+            <button id="avl-insert-btn" class="btn btn-success" title="Inserta con animación de rotaciones">➕ Insertar (auto)</button>
+            <button id="avl-search-btn" class="btn" title="Busca con animación paso a paso">🔍 Buscar O(log n)</button>
+            <button id="avl-delete-btn" class="btn btn-warning" title="Elimina y rebalancea con animación">🗑️ Eliminar (auto)</button>
+
+            <span style="border-left: 1px solid #374151; height: 20px;"></span>
+
+            <button id="avl-play-btn" class="btn" title="Reanudar la animación pausada">▶ Reanudar</button>
+            <button id="avl-pause-btn" class="btn" title="Pausar la animación en curso">⏸ Pausar</button>
+            <button id="avl-step-btn" class="btn" title="Avanzar un único paso (útil para ver rotaciones LL/RR/LR/RL)">⏭ Paso</button>
+            <button id="avl-clear-btn" class="btn btn-danger">🧹 Vaciar</button>
+          </div>
+
+          <div id="avl-stage"></div>
+        </div>
+      </section>
+
+      <!-- PANEL 10: GRAFOS -->
+      <section id="panel-graph" class="tab-panel">
+        <div class="card">
+          <div class="card-header">
+            <h2 class="card-title">🌐 Grafos Ponderados (BFS, DFS, Dijkstra, Matriz y Lista)</h2>
+            <button class="help-btn" data-help="graph" title="Ayuda sobre esta estructura (?)">❓</button>
+            <button id="graph-preset-btn" class="btn btn-primary">🔄 Red de Ejemplo</button>
+          </div>
+
+          <div class="controls-bar" style="margin-bottom: 0.5rem; flex-wrap: wrap;">
+            <label style="font-size: 0.8rem; font-weight: 700; color: #93c5fd;">API:</label>
+            <input type="text" id="graph-node-input" class="form-input" placeholder="Etiqueta (opcional)" style="width: 130px;">
+            <button id="graph-add-node-btn" class="btn btn-success" title="Agrega un nodo con posición aleatoria">➕ Nodo</button>
+
+            <span style="border-left: 1px solid #374151; height: 20px;"></span>
+
+            <input type="text" id="graph-edge-from" class="form-input" placeholder="De" style="width: 50px;">
+            <input type="text" id="graph-edge-to" class="form-input" placeholder="A" style="width: 50px;">
+            <input type="number" id="graph-edge-w" class="form-input" placeholder="Peso" value="3" style="width: 60px;">
+            <button id="graph-add-edge-btn" class="btn" title="Conecta dos nodos existentes">🔗 Arista</button>
+
+            <button id="graph-clear-btn" class="btn btn-danger" style="margin-left: auto;">🧹 Vaciar</button>
+          </div>
+
+          <div class="controls-bar" style="margin-bottom: 0.5rem; background: #0c1830; border: 1px solid #2d4570; flex-wrap: wrap;">
+            <span style="font-size: 0.8rem; font-weight: 800; color: #38bdf8;">🖱️ Modo interactivo:</span>
+            <button id="graph-mode-none" class="btn btn-mode active-mode" title="Desactiva el modo interactivo">⬜ Ninguno</button>
+            <button id="graph-mode-add-node" class="btn btn-mode" title="Haga clic en el lienzo para agregar un nodo">➕ Agregar nodo</button>
+            <button id="graph-mode-add-edge" class="btn btn-mode" title="Clic en origen, luego en destino">🔗 Agregar arista</button>
+            <button id="graph-mode-del-node" class="btn btn-mode" title="Clic sobre un nodo para eliminarlo">🗑️ Eliminar nodo</button>
+            <button id="graph-mode-del-edge" class="btn btn-mode" title="Clic en los dos extremos de la arista">🗑️ Eliminar arista</button>
+          </div>
+
+          <div class="controls-bar" style="margin-bottom: 1rem;">
+            <label style="font-size: 0.8rem; font-weight: 700; color: #93c5fd;">Algoritmos:</label>
+            <button id="graph-bfs-btn" class="btn btn-primary">🚶 BFS (Anchura)</button>
+            <button id="graph-dfs-btn" class="btn btn-primary">🧗 DFS (Profundidad)</button>
+            <button id="graph-dijkstra-btn" class="btn btn-warning">🗺️ Dijkstra (Óptimo A ➔ F)</button>
+          </div>
+
+          <div id="graph-stage"></div>
+        </div>
+      </section>
+
+      <!-- PANEL 11: HASH -->
+      <section id="panel-hash" class="tab-panel">
+        <div class="card">
+          <div class="card-header">
+            <h2 class="card-title">🗄️ Tabla Hash con Resolución de Colisiones</h2>
+            <button class="help-btn" data-help="hash" title="Ayuda sobre esta estructura (?)">❓</button>
+            <button class="btn btn-primary btn-load-dataset-into" data-target="hash">📂 Cargar Dataset a la Tabla</button>
+          </div>
+
+          <div class="controls-bar" style="margin-bottom: 1rem;">
+            <label for="hash-cap-input" style="font-size: 0.85rem;">Capacidad (m):</label>
+            <input type="number" id="hash-cap-input" class="form-input" value="7" min="3" max="19" style="width: 60px;">
+            <label for="hash-strategy-select" style="font-size: 0.85rem;">Colisiones:</label>
+            <select id="hash-strategy-select" class="form-select">
+              <option value="chaining">Encadenamiento (Chaining)</option>
+              <option value="linear_probing">Sondeo Lineal (Linear Probing)</option>
+            </select>
+            <input type="text" id="hash-key-input" class="form-input" placeholder="Clave" style="width: 90px;">
+            <input type="text" id="hash-val-input" class="form-input" placeholder="Valor" style="width: 100px;">
+            <button id="hash-insert-btn" class="btn btn-success">📥 Insertar</button>
+            <button id="hash-search-btn" class="btn">🔍 Buscar</button>
+            <button id="hash-delete-btn" class="btn btn-warning">🗑️ Borrar</button>
+            <button id="hash-clear-btn" class="btn btn-danger">🧹 Vaciar</button>
+          </div>
+
+          <div id="hash-stage"></div>
+        </div>
+      </section>
+
+      <!-- PANEL 12: QUIZ -->
+      <section id="panel-quiz" class="tab-panel">
+        <div class="card">
+          <div class="card-header">
+            <h2 class="card-title">🎯 Modo Desafío / Quiz Didáctico Interactivo</h2>
+            <button class="help-btn" data-help="quiz" title="Ayuda sobre este módulo (?)">❓</button>
+          </div>
+          <div id="quiz-container"></div>
+        </div>
+      </section>
+
+      <!-- PANEL 13: DATASETS -->
+      <section id="panel-datasets" class="tab-panel">
+        <div class="card">
+          <div class="card-header">
+            <h2 class="card-title">📁 Gestor de Datasets y Archivos Externos</h2>
+            <button class="help-btn" data-help="datasets" title="Ayuda sobre este módulo (?)">❓</button>
+          </div>
+
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem;">
+            <div>
+              <h4 style="margin-bottom: 0.5rem; color: #93c5fd;">1. Cargar Archivo Local (.csv, .txt, .json)</h4>
+              <div id="file-drop-zone" class="drop-zone">
+                <div class="drop-icon">📄</div>
+                <p style="font-weight: 600; margin-bottom: 0.25rem;">Arrastre su archivo aquí o haga clic para examinar</p>
+                <p style="font-size: 0.8rem; color: var(--text-muted);">Soporta CSV con encabezados, TXT plano y JSON estructurado.</p>
+              </div>
+
+              <div style="margin-top: 1rem;">
+                <h4 style="margin-bottom: 0.5rem; color: #93c5fd;">2. Generador Sintético de Datos</h4>
+                <div class="controls-bar">
+                  <label for="random-count-input" style="font-size: 0.85rem;">Cantidad:</label>
+                  <input type="number" id="random-count-input" class="form-input" value="20" min="5" max="50" style="width: 70px;">
+                  <button id="gen-random-btn" class="btn btn-primary">🎲 Aleatorio</button>
+                  <button id="gen-nearly-btn" class="btn">📈 Casi Ordenado</button>
+                  <button id="gen-reverse-btn" class="btn btn-warning">📉 Invertido</button>
+                </div>
+              </div>
+            </div>
+
+            <div>
+              <h4 style="margin-bottom: 0.5rem; color: #93c5fd;">3. Datasets de Muestra Incluidos</h4>
+              <ul style="list-style: none; display: flex; flex-direction: column; gap: 0.5rem;">
+                <li style="background: rgba(0,0,0,0.25); padding: 0.6rem; border-radius: 6px; border: 1px solid var(--border-subtle);">
+                  <strong style="color: #60a5fa;">datos_numeros.csv:</strong> 25 muestras con columnas id, valor y etiqueta.
+                </li>
+                <li style="background: rgba(0,0,0,0.25); padding: 0.6rem; border-radius: 6px; border: 1px solid var(--border-subtle);">
+                  <strong style="color: #60a5fa;">datos_valores.txt:</strong> 25 números delimitados por comas para pruebas rápidas.
+                </li>
+                <li style="background: rgba(0,0,0,0.25); padding: 0.6rem; border-radius: 6px; border: 1px solid var(--border-subtle);">
+                  <strong style="color: #60a5fa;">datos_estudiantes.json:</strong> 15 registros estructurados de estudiantes con notas.
+                </li>
+                <li style="background: rgba(0,0,0,0.25); padding: 0.6rem; border-radius: 6px; border: 1px solid var(--border-subtle);">
+                  <strong style="color: #60a5fa;">datos_inversos.csv:</strong> 20 elementos descendentes (peor caso).
+                </li>
+                <li style="background: rgba(0,0,0,0.25); padding: 0.6rem; border-radius: 6px; border: 1px solid var(--border-subtle);">
+                  <strong style="color: #60a5fa;">quiz_preguntas.json:</strong> banco expandible de preguntas del Quiz.
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </section>
+
+    </div>
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar-panel">
+      <div class="card">
+        <div class="card-header" style="padding-bottom: 0.5rem; margin-bottom: 0.5rem;">
+          <h3 class="card-title" style="font-size: 0.95rem;">⏱ Velocidad de Ejecución</h3>
+          <span id="speed-label" style="font-size: 0.85rem; font-weight: 700; color: #38bdf8;">250 ms</span>
+        </div>
+        <div style="display: flex; align-items: center; gap: 0.75rem;">
+          <span style="font-size: 0.75rem; color: var(--text-muted);">Rápido</span>
+          <input type="range" id="speed-slider" min="30" max="1000" step="20" value="250" style="flex: 1; cursor: pointer;">
+          <span style="font-size: 0.75rem; color: var(--text-muted);">Lento</span>
+        </div>
+        <p style="font-size: 0.72rem; color: var(--text-muted); margin-top: 0.5rem;">
+          Afecta a sorting, searching, race, BST, AVL, grafos, listas y hash.
+        </p>
+      </div>
+
+      <div class="card" style="flex: 1; display: flex; flex-direction: column;">
+        <div class="card-header" style="padding-bottom: 0.5rem; margin-bottom: 0.5rem;">
+          <h3 class="card-title" style="font-size: 0.95rem;">💻 Consola Didáctica</h3>
+          <button id="clear-log-btn" class="btn" style="padding: 0.2rem 0.5rem; font-size: 0.75rem;">Limpiar</button>
+        </div>
+        <p style="font-size: 0.75rem; color: var(--text-muted); margin-bottom: 0.5rem;">
+          Registro en tiempo real de operaciones, comparaciones, desplazamientos y estados.
+        </p>
+        <div id="log-stream" class="log-stream-box"></div>
+      </div>
+    </aside>
+
+  </main>
+
+  <!-- MODAL ACERCA DE REA Y LICENCIA CC-BY-NC -->
+  <div id="help-modal-backdrop" class="modal-backdrop">
+    <div class="modal-card">
+      <div style="display: flex; justify-content: space-between; align-items: flex-start; border-bottom: 1px solid #374151; padding-bottom: 0.75rem;">
+        <div>
+          <h2 style="color: #60a5fa; font-size: 1.25rem; font-weight: 700;">Recurso Educativo Abierto (REA)</h2>
+          <p style="font-size: 0.82rem; color: var(--text-secondary);">Laboratorio Visual de Estructuras de Datos y Algoritmos</p>
+        </div>
+        <button class="modal-close-btn" onclick="window.closeHelpModal()">&times;</button>
+      </div>
+
+      <div>
+        <h4 style="color: #34d399; font-size: 0.95rem; margin-bottom: 0.35rem;">📘 Características como REA (Recurso Educativo Abierto)</h4>
+        <p style="font-size: 0.85rem; color: #cbd5e1; line-height: 1.5;">
+          Este software cumple con los principios de un <strong>Recurso Educativo Abierto (OER / REA)</strong>: es un material digital de enseñanza, aprendizaje e investigación de libre acceso, con interactividad pedagógica, parametrización de variables, simulación paso a paso y disponibilidad de código fuente sin barreras tecnológicas.
+        </p>
+      </div>
+
+      <div style="background: rgba(0, 0, 0, 0.3); padding: 0.85rem; border-radius: 8px; border: 1px solid #374151;">
+        <h4 style="color: #93c5fd; font-size: 0.95rem; margin-bottom: 0.5rem;">👥 Autoría y Asistencia de Inteligencia Artificial</h4>
+        <ul style="list-style: none; display: flex; flex-direction: column; gap: 0.4rem; font-size: 0.85rem; color: #e2e8f0;">
+          <li>
+            <strong style="color: #f59e0b;">Docente / Creador del Proyecto:</strong>
+            <span id="creator-name-display" style="font-weight: 700; color: #60a5fa;">Cargando autor...</span>
+            <span id="creator-source-badge" style="font-size: 0.75rem; color: #94a3b8; margin-left: 6px;">(Leído desde: autor.txt)</span>
+            <label class="btn" style="padding: 2px 8px; font-size: 0.72rem; margin-left: 8px; cursor: pointer;" title="Cargar otro archivo de texto con el nombre">
+              📂 Cargar archivo .txt
+              <input type="file" id="author-file-input" accept=".txt" style="display: none;">
+            </label>
+            <button class="btn" style="padding: 2px 8px; font-size: 0.72rem; margin-left: 4px;" onclick="window.reloadAuthorFile()" title="Releer archivo autor.txt">
+              🔄 Releer autor.txt
+            </button>
+          </li>
+          <li>
+            <strong style="color: #38bdf8;">Asistencia de IA:</strong>
+            Desarrollado y optimizado con <em>Google Antigravity</em> utilizando el modelo <em>Gemini 3.8 Flash (High)</em> de Google DeepMind.
+          </li>
+          <li>
+            <strong style="color: #a78bfa;">Enfoque Metodológico:</strong>
+            Aprendizaje activo para carreras universitarias de Informática y Computación, basado en simulación visual interactiva y análisis de complejidad algorítmica.
+          </li>
+        </ul>
+      </div>
+
+      <div style="background: rgba(15, 30, 56, 0.4); padding: 0.85rem; border-radius: 8px; border: 1px solid #243b61;">
+        <h4 style="color: #38bdf8; font-size: 0.95rem; margin-bottom: 0.4rem;">👁️ Accesibilidad Visual y Diseño Inclusivo (Pautas UNSL / WCAG 2.1)</h4>
+        <p style="font-size: 0.83rem; color: #cbd5e1; line-height: 1.45;">
+          El entorno incorpora criterios de accesibilidad visual inspirados en las pautas de la <strong>Universidad Nacional de San Luis (UNSL)</strong> y estándares internacionales <strong>WCAG 2.1 AA/AAA</strong>:
+        </p>
+        <ul style="margin-top: 0.4rem; padding-left: 1.25rem; font-size: 0.82rem; color: #94a3b8; line-height: 1.4;">
+          <li>Paleta cromática con contraste reforzado (&gt; 7:1) adaptada para baja visión y daltonismo (deuteranopía, protanopía y tritanopía).</li>
+          <li>Uso de redundancia sensorial (iconos, etiquetas de texto y contornos estructurales en adición al color).</li>
+          <li>Diseño adaptable que previene el desborde horizontal de pantalla mediante barras de desplazamiento suave sin sacrificar el tamaño tipográfico.</li>
+          <li>Botón <strong>«👁️ Alto Contraste»</strong> disponible en la barra superior.</li>
+        </ul>
+      </div>
+
+      <div>
+        <h4 style="color: #f87171; font-size: 0.95rem; margin-bottom: 0.5rem;">📜 Licencia de Uso: Creative Commons Atribución-NoComercial (CC BY-NC 4.0)</h4>
+
+        <div class="cc-badge-box">
+          <div class="cc-icons-row" title="Licencia Creative Commons CC BY-NC">
+            <svg class="cc-icon-svg" viewBox="0 0 100 100">
+              <circle cx="50" cy="50" r="46" stroke="#94a3b8" stroke-width="8" fill="none"/>
+              <text x="35" y="62" font-size="34" font-family="sans-serif" font-weight="bold" fill="#94a3b8" text-anchor="middle">c</text>
+              <text x="65" y="62" font-size="34" font-family="sans-serif" font-weight="bold" fill="#94a3b8" text-anchor="middle">c</text>
+            </svg>
+            <svg class="cc-icon-svg" viewBox="0 0 100 100">
+              <circle cx="50" cy="50" r="46" stroke="#94a3b8" stroke-width="8" fill="none"/>
+              <circle cx="50" cy="34" r="12" fill="#94a3b8"/>
+              <path d="M 28 80 C 28 55, 72 55, 72 80 Z" fill="#94a3b8"/>
+            </svg>
+            <svg class="cc-icon-svg" viewBox="0 0 100 100">
+              <circle cx="50" cy="50" r="46" stroke="#94a3b8" stroke-width="8" fill="none"/>
+              <text x="50" y="66" font-size="44" font-family="sans-serif" font-weight="bold" fill="#94a3b8" text-anchor="middle">$</text>
+              <line x1="22" y1="22" x2="78" y2="78" stroke="#ef4444" stroke-width="9"/>
+            </svg>
+          </div>
+
+          <div style="font-size: 0.8rem; color: #cbd5e1; line-height: 1.4;">
+            <strong>CC BY-NC (Attribution-NonCommercial)</strong><br>
+            Usted es libre de compartir, copiar, distribuir y adaptar esta obra bajo las siguientes condiciones:
+          </div>
+        </div>
+
+        <ul style="margin-top: 0.6rem; padding-left: 1.25rem; font-size: 0.82rem; color: #94a3b8; line-height: 1.45;">
+          <li><strong>Atribución (BY):</strong> Debe dar crédito apropiado indicando la autoría del creador y la asistencia técnica de IA.</li>
+          <li><strong>No Comercial (NC):</strong> No puede utilizar este material, ni las obras derivadas que de él surjan, para fines comerciales o lucro directo/indirecto.</li>
+        </ul>
+      </div>
+
+      <div style="text-align: right; border-top: 1px solid #374151; padding-top: 0.75rem;">
+        <button class="btn btn-primary" onclick="window.closeHelpModal()">Entendido</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL DE AYUDA CONTEXTUAL POR ESTRUCTURA -->
+  <div id="structure-help-modal-backdrop" class="modal-backdrop">
+    <div class="modal-card modal-card-wide">
+      <div class="help-modal-header">
+        <div style="display: flex; align-items: center; gap: 0.75rem;">
+          <span id="help-modal-icon" style="font-size: 1.75rem;">❓</span>
+          <div>
+            <h2 id="help-modal-title" style="color: #60a5fa; font-size: 1.25rem; font-weight: 700; margin: 0;">Ayuda</h2>
+            <p id="help-modal-subtitle" style="font-size: 0.82rem; color: var(--text-secondary); margin: 0;">Guía de uso del módulo</p>
+          </div>
+        </div>
+        <button class="modal-close-btn" onclick="window.closeStructureHelp()">&times;</button>
+      </div>
+
+      <div id="help-modal-body" class="help-modal-body"></div>
+
+      <div class="help-modal-footer">
+        <div class="help-nav-hint">
+          <span>💡 Atajo: presioná <kbd>?</kbd> en cualquier panel para abrir esta ayuda.</span>
+        </div>
+        <div style="display: flex; gap: 0.5rem;">
+          <button class="btn" onclick="window.closeStructureHelp()">Cerrar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="js/file_loader.js"></script>
+  <script src="js/sorting.js"></script>
+  <script src="js/searching.js"></script>
+  <script src="js/pseudocode.js"></script>
+  <script src="js/race_mode.js"></script>
+  <script src="js/benchmark.js"></script>
+  <script src="js/quiz.js"></script>
+  <script src="js/help_content.js"></script>
+  <script src="js/structures/stack.js"></script>
+  <script src="js/structures/queue.js"></script>
+  <script src="js/structures/linked_list.js"></script>
+  <script src="js/structures/bst.js"></script>
+  <script src="js/structures/avl.js"></script>
+  <script src="js/structures/graph.js"></script>
+  <script src="js/structures/hash_table.js"></script>
+  <script src="js/app.js"></script>
+
+</body>
+</html>
+

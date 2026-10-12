@@ -1,0 +1,130 @@
+================================================================================
+      LABORATORIO VISUAL DE ESTRUCTURAS DE DATOS Y ALGORITMOS  (REA)
+================================================================================
+
+  Recurso Educativo Abierto (CC BY-NC 4.0) para la enseñanza inicial de
+  estructuras de datos y análisis de complejidad algorítmica.
+
+--------------------------------------------------------------------------------
+  1. COMO EMPEZAR  (lea esto primero, toma 10 segundos)
+--------------------------------------------------------------------------------
+
+  Haga DOBLE CLIC en el archivo:
+
+        iniciar.bat
+
+  Se abrira un menu con varias opciones. Si no sabe cual elegir,
+  presione la tecla  1  y luego Enter.
+
+  Eso abre el laboratorio en su navegador. Listo.
+
+--------------------------------------------------------------------------------
+  2. QUE OPCION ELEGIR EN EL MENU
+--------------------------------------------------------------------------------
+
+  [1]  Abrir directo con el navegador
+       -> La mas simple. Funciona siempre. Sin instalar nada.
+       -> Recomendada para uso rapido o primera vez.
+
+  [2]  Servidor local Python   (http://localhost:8000)
+       -> Requiere tener Python instalado.
+       -> Habilita la lectura automatica del archivo autor.txt
+          y del banco de preguntas del Quiz.
+
+  [3]  Servidor local Node.js  (http://localhost:8080)
+       -> Requiere tener Node.js instalado.
+       -> Igual que la [2], pero sin Python.
+
+  [4]  Verificacion de integridad del proyecto
+       -> Comprueba que todos los archivos esten presentes
+          y que la version sea la correcta.
+
+  [5]  Abrir la carpeta del proyecto
+       -> Abre el Explorador de Windows en esta misma carpeta.
+
+  [0]  Salir
+
+--------------------------------------------------------------------------------
+  3. SI ALGO NO FUNCIONA
+--------------------------------------------------------------------------------
+
+  * La ventana se cierra sola al ejecutar iniciar.bat
+       -> Es normal si eligio la opcion [1]: el lanzador abre el
+          navegador y se cierra. No es un error.
+
+  * El nombre del docente no aparece en el modal "Acerca de"
+       -> Normal con la opcion [1] (file://). Use la opcion [2] o [3].
+
+  * Windows muestra "Windows protegio su PC" al ejecutar el .bat
+       -> Clic en "Mas informacion" -> "Ejecutar de todas formas".
+          Es un aviso estandar para archivos .bat descargados.
+
+  * El navegador no abre nada
+       -> Verifique que tenga un navegador moderno (Chrome, Edge,
+          Firefox o Safari). Luego vuelva a intentar con la opcion [1].
+
+  * Faltan archivos o el proyecto se ve incompleto
+       -> Ejecute la opcion [4] del menu (verificacion de integridad).
+          Le dira exactamente que falta.
+
+--------------------------------------------------------------------------------
+  4. ESTRUCTURA DEL PROYECTO
+--------------------------------------------------------------------------------
+
+  iniciar.bat            Lanzador interactivo (haga doble clic aqui)
+  LEEME_PRIMERO.txt      Este archivo
+
+  index.html             Interfaz principal (se abre en el navegador)
+  css/styles.css         Estilos visuales
+  js/                    Motor del laboratorio (JavaScript puro)
+  datos/                 Archivos de datos y banco de preguntas
+  tests/                 Pruebas de integridad del codigo
+  scripts/               Utilidades (verificacion, servidor local)
+
+  Documentacion completa:
+     README.md           Guia de uso general
+     ARQUITECTURA.md     Documento tecnico (para desarrolladores)
+     CHANGELOG.md        Historial de cambios y versiones
+
+--------------------------------------------------------------------------------
+  5. QUE INCLUYE
+--------------------------------------------------------------------------------
+
+  * 7 algoritmos de ordenamiento con pseudocodigo en vivo.
+  * 24 variantes de busqueda (Biseccion y Triseccion).
+  * 7 estructuras de datos: Pila, Cola, Lista, BST, AVL, Grafo, Hash.
+  * Comparador en paralelo (Race Mode).
+  * Benchmark empirico con curvas de rendimiento.
+  * Quiz didactico con banco de preguntas expandible.
+  * Modo de alto contraste (pautas UNSL / WCAG 2.1).
+  * Sistema de ayuda contextual por modulo (boton ? en cada panel).
+
+--------------------------------------------------------------------------------
+  6. AUTORIA Y LICENCIA
+--------------------------------------------------------------------------------
+
+  El nombre del docente / creador se carga automaticamente desde el
+  archivo   autor.txt   (una sola linea de texto, sin el caracter #).
+  Puede editarlo con cualquier editor de texto y reiniciar la aplicacion.
+
+  Licencia:  Creative Commons Atribucion-NoComercial 4.0 (CC BY-NC 4.0)
+
+     Usted es libre de:
+        Compartir  - copiar y redistribuir el material.
+        Adaptar   - remezclar, transformar y construir a partir del material.
+
+     Bajo las siguientes condiciones:
+        Atribucion    - Dar credito al autor original.
+        NoComercial   - Sin fines comerciales.
+
+     Mas informacion: https://creativecommons.org/licenses/by-nc/4.0/
+
+================================================================================
+  Consejo final: si va a usar el laboratorio en una clase, ejecute primero
+  la opcion [4] (verificacion de integridad) para asegurarse de que todo
+  esta en orden. Toma 2 segundos y evita sorpresas durante la exposicion.
+================================================================================
+
+
+
+
