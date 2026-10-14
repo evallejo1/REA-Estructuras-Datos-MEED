@@ -39,7 +39,7 @@ set HAS_SERVE_JS=0
 if exist "%~dp0scripts\serve.js" set HAS_SERVE_JS=1
 
 set HAS_SANITY=0
-if exist "%~dp0scripts\sanity_check.bat" set HAS_SANITY=1
+if exist "%~dp0scripts\verificador.bat" set HAS_SANITY=1
 
 :menu
 cls
@@ -49,12 +49,12 @@ echo     Laboratorio Visual de Estructuras de Datos y Algoritmos
 echo     Recurso Educativo Abierto (REA) - CC BY-NC 4.0
 echo  ================================================================
 echo.
-echo     Como desea iniciar la aplicacion?
+echo     ¿Cómo desea iniciar la aplicación?
 echo.
 echo       [1]  Abrir directo con el navegador    (file://)
 echo       [2]  Servidor local Python             (http://localhost:8000)
 echo       [3]  Servidor local Node.js            (http://localhost:8080)
-echo       [4]  Verificacion de integridad del proyecto
+echo       [4]  Verificación de integridad del proyecto
 echo       [5]  Abrir carpeta del proyecto
 echo       [0]  Salir
 echo.
@@ -73,18 +73,18 @@ if "!HAS_NODE!"=="1" (
 if "!HAS_SERVE_JS!"=="1" (
     echo     serve.js:   presente
 ) else (
-    echo     serve.js:   ausente    [opcion 3 deshabilitada]
+    echo     serve.js:   ausente    [opción 3 deshabilitada]
 )
 if "!HAS_SANITY!"=="1" (
     echo     Sanity:     presente
 ) else (
-    echo     Sanity:     ausente    [opcion 4 deshabilitada]
+    echo     Sanity:     ausente    [opción 4 deshabilitada]
 )
 echo     --------------------------------------------------------------
 echo.
 
 set "CHOICE="
-set /p CHOICE="     Elija una opcion [0-5]: "
+set /p CHOICE="     Elija una opción [0-5]: "
 
 if "!CHOICE!"=="1" goto open_browser
 if "!CHOICE!"=="2" goto serve_python
@@ -95,7 +95,7 @@ if "!CHOICE!"=="0" goto end
 
 echo.
 echo     Opcion invalida. Intente de nuevo.
-timeout /t 2 /nobreak >nul
+timeout /t 5 /nobreak >nul
 goto menu
 
 :open_browser
@@ -108,7 +108,7 @@ echo     La lectura de autor.txt puede fallar por CORS del navegador;
 echo     si ocurre, use la opcion [2] o [3] para servidor local.
 echo.
 start "" "index.html"
-timeout /t 3 /nobreak >nul
+timeout /t 5 /nobreak >nul
 goto end
 
 :serve_python
@@ -121,14 +121,14 @@ echo     Se abrira una NUEVA VENTANA con el servidor HTTP.
 echo     Para detenerlo: cierre esa ventana o presione Ctrl+C en ella.
 echo.
 start "REA - Servidor Python [8000]" cmd /k "!PY_CMD! -m http.server 8000 --bind 127.0.0.1"
-echo     Esperando 2 segundos a que el servidor arranque...
-timeout /t 2 /nobreak >nul
+echo     Esperando 3 segundos a que el servidor arranque...
+timeout /t 3 /nobreak >nul
 echo     Abriendo el navegador...
 start "" "http://localhost:8000"
 echo.
 echo     Servidor corriendo en segundo plano.
-echo     Esta ventana se cerrara en 3 segundos.
-timeout /t 3 /nobreak >nul
+echo     Esta ventana se cerrara en 5 segundos.
+timeout /t 5 /nobreak >nul
 goto end
 
 :no_python
@@ -161,14 +161,14 @@ echo     Se abrira una NUEVA VENTANA con el servidor HTTP.
 echo     Para detenerlo: cierre esa ventana o presione Ctrl+C en ella.
 echo.
 start "REA - Servidor Node [8080]" cmd /k "node "%~dp0scripts\serve.js" 8080"
-echo     Esperando 2 segundos a que el servidor arranque...
-timeout /t 2 /nobreak >nul
+echo     Esperando 3 segundos a que el servidor arranque...
+timeout /t 3 /nobreak >nul
 echo     Abriendo el navegador...
 start "" "http://localhost:8080"
 echo.
 echo     Servidor corriendo en segundo plano.
-echo     Esta ventana se cerrara en 3 segundos.
-timeout /t 3 /nobreak >nul
+echo     Esta ventana se cerrara en 5 segundos.
+timeout /t 5 /nobreak >nul
 goto end
 
 :no_node
@@ -207,16 +207,16 @@ if "!HAS_SANITY!"=="0" goto no_sanity
 echo.
 echo     Ejecutando verificacion de integridad del proyecto...
 echo.
-call "%~dp0scripts\sanity_check.bat"
+call "%~dp0scripts\verificador.bat"
 goto menu
 
 :no_sanity
 cls
 echo.
-echo     El archivo "scripts\sanity_check.bat" no esta presente.
+echo     El archivo "scripts\verificador.bat" no esta presente.
 echo.
 echo     Ubicacion esperada:
-echo       %~dp0scripts\sanity_check.bat
+echo       %~dp0scripts\verificador.bat
 echo.
 echo     Presione una tecla para volver al menu...
 pause >nul
